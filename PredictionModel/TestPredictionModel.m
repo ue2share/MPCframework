@@ -1,0 +1,143 @@
+load rt
+
+
+
+%% Occnum
+global t
+occnum = 1;
+t = rt{occnum};
+
+%% Model length
+global init_num duration
+init_num = 1000;
+duration = 6*6;
+
+%% Outputnum parameters
+
+outputnum_total = [1 3 12]; %Output is tin, gas, or delta T.
+
+num_output = length(outputnum_total);
+%% inputnum parameters
+
+% Element's candidate for input number
+inputset_total_raw_tin = [2 5 7 8];
+inputset_total_raw_gas = [1 2 5 7 8];
+inputset_total_raw_delT = [1 2 5 7 8];
+
+
+% Candidate sets for input number
+inputset_total_tin = {};
+inputset_total_gas = {};
+inputset_total_delT = {};
+
+for n = 1:5
+    if n<=length(inputset_total_raw_tin)
+        s = nchoosek(inputset_total_raw_tin, n);
+        for m = 1:size(s)
+           inputset_total_tin{end+1} = s(m, :);
+        end
+    else
+        s = nchoosek(inputset_total_raw_gas, n);
+        for m = 1:size(s)
+           inputset_total_gas{end+1} = s(m, :);
+           inputset_total_delT{end+1} = s(m, :);
+        end
+    end
+end
+
+% Number of inputset
+num_inputset_tin = length(inputset_total_tin);
+num_inputset_gas = length(inputset_total_gas);
+num_inputset_delT = length(inputset_total_delT);
+
+num_inputset_max = max([num_inputset_delT, num_inputset_gas, num_inputset_tin]);
+%% Delay parameters & Model Order(for ar- model)
+
+iodelay_range = 1:1;
+codelay_range = 1:1;
+% applyingDelay = DisplayDelay - 1
+
+order_range = 1:1;
+% applyingOrder = DisplayOrder - 1
+
+numio = length(iodelay_range);
+numco = length(codelay_range);
+numord = length(order_range);
+%% Estimate
+[x_tin, y_tin, iddata_tin, order_arx_tin, order_armax_tin ...
+    ,lrg_tin, lrg_mse_tin,...
+    arx_tin, arx_mse_tin,...
+    armax_tin, armax_mse_tin,...
+    narx_tin, narx_mse_tin]...
+    = deal(cell(num_inputset_max, numio, numco, numord));
+
+for inputnum_index = 1:num_inputset_tin
+    inputnum = inputset_total_tin{inputnum_index};
+    for iodelay = iodelay_range
+        for codelay = codelay_range    
+            for order = order_range
+
+               % Calculate x, y, iddata for tin
+                [x_tin{inputnum_index, iodelay, codelay, order},...
+                    y_tin{inputnum_index, iodelay, codelay, order},...
+                    iddata_tin{inputnum_index, iodelay, codelay, order}]=...
+                    ionumdelay_2_model_input(inputnum, 1, iodelay, codelay); 
+
+                % Linear Regression
+                lrg_tin{inputnum_index, iodelay, codelay, order}...
+                    = fitlm(x_tin{inputnum_index, iodelay, codelay, order},...
+                                y_tin{inputnum_index, iodelay, codelay, order});
+
+                % Order calculation
+                na=order;
+                nb=order;
+                nc=order;
+                [order_arx_tin{inputnum_index, iodelay, codelay, order},...
+                    order_armax_tin{inputnum_index, iodelay, codelay, order}]...
+                    = order_4_ar_family(inputnum, na, nb, nc);
+                
+                % arx
+                arx_tin{inputnum_index, iodelay, codelay, order}...
+                    =arx(iddata_tin{inputnum_index, iodelay, codelay, order},...
+                    order_arx_tin{inputnum_index, iodelay, codelay, order});
+                
+                % armax
+                armax_tin{inputnum_index, iodelay, codelay, order}...
+                    =armax(iddata_tin{inputnum_index, iodelay, codelay, order},...
+                    order_armax_tin{inputnum_index, iodelay, codelay, order});
+                
+                % narx
+                narx_tin{inputnum_index, iodelay, codelay, order}...
+                    =nlarx(iddata_tin{inputnum_index, iodelay, codelay, order},...
+                    order_arx_tin{inputnum_index, iodelay, codelay, order});
+                
+                % lrg - MSE
+                lrg_mse_tin{inputnum_index, iodelay, codelay, order}...
+                    =lrg_tin{inputnum_index, iodelay, codelay, order}.MSE;
+                
+                % ar-form - MSE
+                arx_mse_tin{inputnum_index, iodelay, codelay, order}...
+                    =arx_tin{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                armax_mse_tin{inputnum_index, iodelay, codelay, order}...
+                    =armax_tin{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                narx_mse_tin{inputnum_index, iodelay, codelay, order}...
+                    =narx_tin{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                %Display the current step
+                fprintf('Output : Tin, InputIndex : %d, IOdelay : %d, COdelay : %d, Order : %d\n',...
+                    inputnum_index, iodelay, codelay, order)
+            end
+        end
+    end
+end
+
+
+
+
+
+
+
+
+
