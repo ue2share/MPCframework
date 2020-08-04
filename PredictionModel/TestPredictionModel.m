@@ -10,7 +10,7 @@ t = rt{occnum};
 %% Model length
 global init_num duration
 init_num = 1000;
-duration = 6*6;
+duration = 6*24*30;
 
 %% Outputnum parameters
 
@@ -36,13 +36,14 @@ for n = 1:5
         for m = 1:size(s)
            inputset_total_tin{end+1} = s(m, :);
         end
-    else
-        s = nchoosek(inputset_total_raw_gas, n);
-        for m = 1:size(s)
-           inputset_total_gas{end+1} = s(m, :);
-           inputset_total_delT{end+1} = s(m, :);
-        end
     end
+    
+    s = nchoosek(inputset_total_raw_gas, n);
+    for m = 1:size(s)
+       inputset_total_gas{end+1} = s(m, :);
+       inputset_total_delT{end+1} = s(m, :);
+    end
+    
 end
 
 % Number of inputset
@@ -63,7 +64,8 @@ order_range = 1:1;
 numio = length(iodelay_range);
 numco = length(codelay_range);
 numord = length(order_range);
-%% Estimate
+
+%% Estimate Model - Tin
 [x_tin, y_tin, iddata_tin, order_arx_tin, order_armax_tin ...
     ,lrg_tin, lrg_mse_tin,...
     arx_tin, arx_mse_tin,...
@@ -134,7 +136,146 @@ for inputnum_index = 1:num_inputset_tin
 end
 
 
+%% Estimate Model - delT
+[x_delT, y_delT, iddata_delT, order_arx_delT, order_armax_delT ...
+    ,lrg_delT, lrg_mse_delT,...
+    arx_delT, arx_mse_delT,...
+    armax_delT, armax_mse_delT,...
+    narx_delT, narx_mse_delT]...
+    = deal(cell(num_inputset_max, numio, numco, numord));
 
+for inputnum_index = 1:num_inputset_delT
+    inputnum = inputset_total_delT{inputnum_index};
+    for iodelay = iodelay_range
+        for codelay = codelay_range    
+            for order = order_range
+
+               % Calculate x, y, iddata for delT
+                [x_delT{inputnum_index, iodelay, codelay, order},...
+                    y_delT{inputnum_index, iodelay, codelay, order},...
+                    iddata_delT{inputnum_index, iodelay, codelay, order}]=...
+                    ionumdelay_2_model_input(inputnum, 1, iodelay, codelay); 
+
+                % Linear Regression
+                lrg_delT{inputnum_index, iodelay, codelay, order}...
+                    = fitlm(x_delT{inputnum_index, iodelay, codelay, order},...
+                                y_delT{inputnum_index, iodelay, codelay, order});
+
+                % Order calculation
+                na=order;
+                nb=order;
+                nc=order;
+                [order_arx_delT{inputnum_index, iodelay, codelay, order},...
+                    order_armax_delT{inputnum_index, iodelay, codelay, order}]...
+                    = order_4_ar_family(inputnum, na, nb, nc);
+                
+                % arx
+                arx_delT{inputnum_index, iodelay, codelay, order}...
+                    =arx(iddata_delT{inputnum_index, iodelay, codelay, order},...
+                    order_arx_delT{inputnum_index, iodelay, codelay, order});
+                
+                % armax
+                armax_delT{inputnum_index, iodelay, codelay, order}...
+                    =armax(iddata_delT{inputnum_index, iodelay, codelay, order},...
+                    order_armax_delT{inputnum_index, iodelay, codelay, order});
+                
+                % narx
+                narx_delT{inputnum_index, iodelay, codelay, order}...
+                    =nlarx(iddata_delT{inputnum_index, iodelay, codelay, order},...
+                    order_arx_delT{inputnum_index, iodelay, codelay, order});
+                
+                % lrg - MSE
+                lrg_mse_delT{inputnum_index, iodelay, codelay, order}...
+                    =lrg_delT{inputnum_index, iodelay, codelay, order}.MSE;
+                
+                % ar-form - MSE
+                arx_mse_delT{inputnum_index, iodelay, codelay, order}...
+                    =arx_delT{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                armax_mse_delT{inputnum_index, iodelay, codelay, order}...
+                    =armax_delT{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                narx_mse_delT{inputnum_index, iodelay, codelay, order}...
+                    =narx_delT{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                %Display the current step
+                fprintf('Output : delT, InputIndex : %d, IOdelay : %d, COdelay : %d, Order : %d\n',...
+                    inputnum_index, iodelay, codelay, order)
+            end
+        end
+    end
+end
+
+
+%% Estimate Model - gas
+[x_gas, y_gas, iddata_gas, order_arx_gas, order_armax_gas ...
+    ,lrg_gas, lrg_mse_gas,...
+    arx_gas, arx_mse_gas,...
+    armax_gas, armax_mse_gas,...
+    narx_gas, narx_mse_gas]...
+    = deal(cell(num_inputset_max, numio, numco, numord));
+
+for inputnum_index = 1:num_inputset_gas
+    inputnum = inputset_total_gas{inputnum_index};
+    for iodelay = iodelay_range
+        for codelay = codelay_range    
+            for order = order_range
+
+               % Calculate x, y, iddata for gas
+                [x_gas{inputnum_index, iodelay, codelay, order},...
+                    y_gas{inputnum_index, iodelay, codelay, order},...
+                    iddata_gas{inputnum_index, iodelay, codelay, order}]=...
+                    ionumdelay_2_model_input(inputnum, 1, iodelay, codelay); 
+
+                % Linear Regression
+                lrg_gas{inputnum_index, iodelay, codelay, order}...
+                    = fitlm(x_gas{inputnum_index, iodelay, codelay, order},...
+                                y_gas{inputnum_index, iodelay, codelay, order});
+
+                % Order calculation
+                na=order;
+                nb=order;
+                nc=order;
+                [order_arx_gas{inputnum_index, iodelay, codelay, order},...
+                    order_armax_gas{inputnum_index, iodelay, codelay, order}]...
+                    = order_4_ar_family(inputnum, na, nb, nc);
+                
+                % arx
+                arx_gas{inputnum_index, iodelay, codelay, order}...
+                    =arx(iddata_gas{inputnum_index, iodelay, codelay, order},...
+                    order_arx_gas{inputnum_index, iodelay, codelay, order});
+                
+                % armax
+                armax_gas{inputnum_index, iodelay, codelay, order}...
+                    =armax(iddata_gas{inputnum_index, iodelay, codelay, order},...
+                    order_armax_gas{inputnum_index, iodelay, codelay, order});
+                
+                % narx
+                narx_gas{inputnum_index, iodelay, codelay, order}...
+                    =nlarx(iddata_gas{inputnum_index, iodelay, codelay, order},...
+                    order_arx_gas{inputnum_index, iodelay, codelay, order});
+                
+                % lrg - MSE
+                lrg_mse_gas{inputnum_index, iodelay, codelay, order}...
+                    =lrg_gas{inputnum_index, iodelay, codelay, order}.MSE;
+                
+                % ar-form - MSE
+                arx_mse_gas{inputnum_index, iodelay, codelay, order}...
+                    =arx_gas{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                armax_mse_gas{inputnum_index, iodelay, codelay, order}...
+                    =armax_gas{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                narx_mse_gas{inputnum_index, iodelay, codelay, order}...
+                    =narx_gas{inputnum_index, iodelay, codelay, order}.Report.Fit.MSE;
+                
+                %Display the current step
+                fprintf('Output : gas, InputIndex : %d, IOdelay : %d, COdelay : %d, Order : %d\n',...
+                    inputnum_index, iodelay, codelay, order)
+            end
+        end
+    end
+end
 
 
 
