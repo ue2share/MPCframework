@@ -10,6 +10,8 @@ r = 2;    % r = # of inputs = r
 h = 36;   % n = Prediction horizon
 t = 110;  % k = Starting number
 
+p_tin = p;
+h_tin = h;
 % tin - signal, tout, elec, rhout, bsp
 
 %% Data (no delay)
@@ -165,7 +167,8 @@ yfore = forecast(arx_tin, 'r--',  pastdata, h, futdata);
 [ycalc_TUV ycalc_T1T2UV ycalc_R1R2S yfore ym_tin(t+1:t+h)]
 
 save('C:\MPCframework\Optimization\Matrix_tin.mat', 'A_tin', 'C_tin','R1_tin', 'R2_tin', 'T1_tin', 'U_tin',...
-    'ym_tin', 'xm_tin', 'um_tin');
+    'ym_tin', 'xm_tin', 'um_tin',...
+    'h_tin', 'p_tin');
 
 
 

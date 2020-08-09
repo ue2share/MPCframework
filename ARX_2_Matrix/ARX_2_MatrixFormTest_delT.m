@@ -10,6 +10,8 @@ r = 2;    % r = # of inputs = r
 h = 36;   % n = Prediction horizon
 t = 110;  % k = Starting number
 
+p_delT = p;
+h_delT = h;
 % delT - signal, tout, elec, rhout, bsp
 
 %% Data (no delay)
@@ -99,20 +101,7 @@ T2 = T(:, (p-1)*r+1:(h+p-1)*r);
 % y = R1*u1 + R2*u2 + S
 
 %--------------------------------------   R1, 2 matrix   -----------------------------------------%
-R1_delT = zeros(h, h);
-R2_delT = zeros(h, h);
-u1 = zeros(h, 1);
-u2 = zeros(h, 1);
 
-for i = 1:2*h
-    if rem(i, 2)~=0 % odd number
-        R1_delT(:, (i-1)/2+1) = T2(:, i);
-        u1((i-1)/2+1, 1) = u_cont_group(i, 1);
-    else
-        R2_delT(:, i/2) = T2(:, i);
-        u2(i/2, 1) = u_cont_group(i, 1);
-    end
-end
 
 %% Verifying Matrix with particular input set
 
@@ -165,10 +154,8 @@ yfore = forecast(arx_delT, 'r--',  pastdata, h, futdata);
 [ycalc_TUV ycalc_T1T2UV ycalc_R1R2S yfore ym_delT(t+1:t+h)]
 
 save('C:\MPCframework\Optimization\Matrix_delT.mat', 'A_delT', 'C_delT','R1_delT', 'R2_delT', 'T1_delT', 'U_delT',...
-    'ym_delT', 'xm_delT', 'um_delT');
-
-
-
+    'ym_delT', 'xm_delT', 'um_delT',...
+    'h_delT', 'p_delT');
 
 
 

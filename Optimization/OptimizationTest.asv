@@ -44,7 +44,7 @@ S_tin = T1_tin*u_tin_past_group + U_tin*x_tin_group + V_tin;
 
 % Set A and b
 tin_lb = 22;
-tin_ub = 52;
+tin_ub = 32;
 A = [R1_tin R2_tin];
 b = tin_ub-S_tin;
 A = [A;-A];
@@ -92,11 +92,10 @@ end
 
 S_gas = T1_gas*u_gas_past_group + U_gas*x_gas_group + V_gas;
 
-gas = R1_gas*u_onoff + R2_gas*u_bsp + S_gas;
 
 
 
-[tin_from_data tin_opt u_onoff u_bsp gas]
+
 
 
 
