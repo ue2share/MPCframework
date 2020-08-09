@@ -1,28 +1,26 @@
-%% Test with Tin
-load tin_mdl_xy.mat
+%% Test with tin
+load tin_4_matrix.mat
 
-samplenum = 4;  %test  case
 
 global p q r h t
 % for k = kset
-p = 6;    % p = model horizon = arx's model order
-q = 6;    % q = # of inputs and control inputs
+p = tin_order(1);    % p = model horizon = arx's model order
+[~, q] = size(tin_X);    % q = # of inputs and control inputs
 r = 2;    % r = # of inputs = r
 h = 36;   % n = Prediction horizon
 t = 110;  % k = Starting number
 
-% Tin - signal, tout, elec, rhout, bsp
+% tin - signal, tout, elec, rhout, bsp
 
 %% Data & Model (delay)
 % y is output         (Tin)
 % x is input          (tout elec rhout)
 % u is control input  (signal boilerSetPoint)
 
-ord = tin_order_arx{samplenum};
-global ym_tin xm_tin um_tin
-ym_tin = tin_Y{samplenum}(1001:4000);                 % y measured
-xm_tin = tin_X{samplenum}(1001:4000, 3:end);        % x measured (tout elec rhout)
-um_tin = tin_X{samplenum}(1001:4000, 1:2);
+ord = tin_order;
+ym_tin = tin_Y(1001:4000);                 % y measured
+xm_tin = tin_X(1001:4000, 3:end);        % x measured (tout elec rhout)
+um_tin = tin_X(1001:4000, 1:2);
 
 % Let's assume delay of u is 1, delay of x is 2.
 um_tin(2:3000) = um_tin(1:2999);
@@ -32,12 +30,12 @@ xm_tin(1:2) = 0;
 idd = iddata(ym_tin, [um_tin xm_tin]);
 arxsample = arx(idd, ord);
 
-ugroup1 = func_group('um_tin', t-p+2, p+h-1);
-xgroup1 = func_group('xm_tin', t-p+2, p+h-1);
+ugroup1 = group_data(um_tin, t-p+2, p+h-1);
+xgroup1 = group_data(xm_tin, t-p+2, p+h-1);
 
-u_past_group = func_group('um_tin', t-p+2, p-1); % (t-p+2)*r+1 ~ t*r
-u_cont_group = func_group('um_tin', t+1, h);   % (t+1)*r+1  ~ (k+p+h-1)*r
-x_group = func_group('xm_tin', t-p+2, p+h-1);
+u_past_group = group_data(um_tin, t-p+2, p-1); % (t-p+2)*r+1 ~ t*r
+u_cont_group = group_data(um_tin, t+1, h);   % (t+1)*r+1  ~ (k+p+h-1)*r
+x_group = group_data(xm_tin, t-p+2, p+h-1);
 
 %% Matrix for Tin - A, B, C, D, E
 %--------------------------------------   A matrix   -----------------------------------------%
@@ -138,7 +136,7 @@ end
 
 
 V = zeros(h, 1);
-y_p_k = func_group('ym_tin', t-p+1, p);
+y_p_k = group_data(ym_tin, t-p+1, p);
 for n = 1:h
 V(n) = A*C^(n-1)*y_p_k;
 end
