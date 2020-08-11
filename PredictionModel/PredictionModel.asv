@@ -1,0 +1,42 @@
+function [ model ] = PredictionModel(rawtable, PredictionModelParameters)
+
+
+[occnum, sampletime, duration1min, startnum, ...
+    iodelay, cdoelay, dependentvar_index, indepedentvar_index, modeling_index,...
+    na, nb, nc]...
+    =PredictionModelParameters;
+%% Occnum
+t = rawtable{occnum};
+
+
+%% Model Time resolution(sampletime)
+% Cut raw table with sampletime.
+tsgroup = @(ts) 1:ts:172800;
+t = t(tsgroup(sampletime(:)), :);
+
+
+%% Model duration
+duration = duration1min/timeResolution;
+
+
+%% inputnum parameters
+% Element's candidate for input number
+inputset_total_raw_tin = [2 5 7 8];
+inputset_total_raw_gas = [1 2 5 7 8];
+inputset_total_raw_delT = [1 2 5 7 8];
+
+
+%% Ouputnum parameters
+
+
+%% Inputnum parameters
+inputarray = InputIndex_2_InputArray(dependentvar_index, indepedentvar_index);
+
+%% Modeling Method
+
+switch modeling_index
+case 1
+[X, Y, ~] = PredictionModelPar_2_ModelInput(t, startnum, duration, input        
+
+end
+

@@ -1,16 +1,6 @@
-function[order_arx, order_armax] = order_4_ar_family(input_index, output_num, na, nb, nc)
-    global inputset_total_tin inputset_total_gas inputset_total_delT
+function[order_arx, order_armax] = order_4_ar_family(inputarray, na, nb, nc)
     
-    switch output_num
-        case 1
-            input_num = inputset_total_tin{input_index};
-        case 3
-            input_num = inputset_total_gas{input_index};
-        case 12
-            input_num = inputset_total_delT{input_index};
-    end
-    
-    nu = length(input_num)+2; %Don't forget signal and bsp
+    nu = length(inputarray)+2; %Don't forget signal and bsp
     ny = 1;
     
     na_mat = na*ones(ny, ny);

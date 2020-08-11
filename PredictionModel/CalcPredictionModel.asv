@@ -1,0 +1,8 @@
+load rt
+
+occnum = 1;
+sampletime = [5, 10];
+sampletime = num2cell(sampletime);
+md = PredictionModel({rt, sampletime, );
+
+md(1, :)
