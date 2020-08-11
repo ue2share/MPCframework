@@ -389,7 +389,7 @@ u_bsp = x(h+1:2*h);
 tin = R1_tin*u_onoff + R2_tin*(u_bsp) + S_tin;
 rwt = (R1_rwt*u_onoff + R2_rwt*u_bsp + S_rwt);
 swt = (R1_swt*u_onoff + R2_swt*u_bsp + S_rwt);
-ot = [tin rwt swt u_onoff u_bsp occ_vector]
+ot = [tin rwt swt u_onoff u_bsp occ_vector];
 
 %% Plotting Result
 close all

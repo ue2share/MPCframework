@@ -320,6 +320,7 @@ delT_mdl = arx_delT{indexnum_extract, iodelay_extract, codelay_extract, order_ex
 save('C:\MPCframework\ARX_2_Matrix\delT_4_matrix.mat', 'delT_iddata', 'delT_X', 'delT_Y', 'delT_order', 'delT_mdl')
 
 
+%% Check goodness of a fit
 
 
 

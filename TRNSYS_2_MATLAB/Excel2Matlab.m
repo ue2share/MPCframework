@@ -1,7 +1,9 @@
-s1 = readtable('FloorHeating_occ1.xlsx', 'Range', 'B3:L52563');
-% s2 = readtable('Radiator_occ3_strat2.xlsx', 'Range', 'B3:L52563');
-% s3 = readtable('Radiator_occ3_strat3.xlsx', 'Range', 'B3:L52563');
-% s4 = readtable('Radiator_occ3_strat4.xlsx', 'Range', 'B3:L52563');
+
+% TRNSYS output data's time resolution is 1min.
+s1 = readtable('FloorHeating_occ1.xlsx', 'Range', 'B3:L525603');
+% s2 = readtable('Radiator_occ3_strat2.xlsx', 'Range', 'B3:L525603');
+% s3 = readtable('Radiator_occ3_strat3.xlsx', 'Range', 'B3:L525603');
+% s4 = readtable('Radiator_occ3_strat4.xlsx', 'Range', 'B3:L525603');
 
 
 % rt = {s1 s2 s3 s4};
@@ -10,7 +12,9 @@ rt = {s1};
 for occstratnum = 1:1
  
 rawtable = rt{occstratnum};
-length_day = 144; %time resolution is 10min.
+time_resolution = 60; %sec
+length_day = (60*60*24)/time_resolution;
+sampletime = [5 10 15 20 30 60];
 
 %preprocess data for winter data
 length_Jan = 31*length_day;
@@ -23,7 +27,12 @@ length_Winter_second = length_Dec+length_Nov;
 t = [rawtable(end-length_Winter_second+1:end, :); rawtable(1:length_Winter_first, :)];
 t.Properties.VariableNames = {'tin', 'tout', 'gas', 'signal', 'elec', 'rhin', 'rhout', 'occ', 'rwt', 'swt', 'bsp'};
 t.delatT = t.swt - t.rwt;
+
+tsgroup = @(ts) 1:ts:172800;
+a = tsgroup(sampletime)
 rt{occstratnum} = t;
+
+
 end
 
 save('C:\MPCframework\PredictionModel\rt.mat')

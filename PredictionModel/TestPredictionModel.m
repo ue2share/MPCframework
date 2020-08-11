@@ -9,14 +9,15 @@ t = rt{occnum};
 
 %% Model length
 global init_num duration
-init_num = 1000;
+
 duration = 6*24*30;
+init_num = 1000;
+
 
 %% Outputnum parameters
 
 outputnum_total = [1 3 12]; %Output is tin, gas, or delta T.
 
-num_output = length(outputnum_total);
 %% inputnum parameters
 
 % Element's candidate for input number
@@ -66,6 +67,10 @@ numco = length(codelay_range);
 numord = length(order_range);
 
 %% Estimate Model - Tin
+
+
+
+
 [x_tin, y_tin, iddata_tin, order_arx_tin, order_armax_tin ...
     ,lrg_tin, lrg_mse_tin,...
     arx_tin, arx_mse_tin,...
@@ -208,6 +213,10 @@ end
 
 
 %% Estimate Model - gas
+
+
+
+
 [x_gas, y_gas, iddata_gas, order_arx_gas, order_armax_gas ...
     ,lrg_gas, lrg_mse_gas,...
     arx_gas, arx_mse_gas,...
