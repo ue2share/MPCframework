@@ -1,3 +1,9 @@
+tab = array2table(zeros(0, 13));
+tableVar= {'occ', 'st', 'dur', 'start', ...
+    'iod', 'cod', 'yi', 'xi', 'mdli',...
+    'na', 'nb', 'nc', 'model'};
+tab.Properties.VariableNames = tableVar;
+
 tic;
 load rt
 
@@ -22,31 +28,36 @@ PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
     iodelay, codelay, dependentvar_index, indepedentvar_index, modeling_index,...
     na, nb, nc];
 
-
 mdl = PredictionModel(rt, PredictionModelParameters);
+
+row_cell = num2cell(PredictionModelParameters);
+row_cell{end+1} = mdl;
+row_table = cell2table(row_cell, 'VariableNames', tableVar);
+tab = [tab;row_table];
 toc;
+
 
 %%
-tic;
-parfor iodelay = 1:100
-    
-PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
-    iodelay, codelay, dependentvar_index, indepedentvar_index, modeling_index,...
-    na, nb, nc];
-
-
-mdl = PredictionModel(rt, PredictionModelParameters);
-end
-toc;
-
-tic;
-for iodelay = 1:100
-    
-PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
-    iodelay, codelay, dependentvar_index, indepedentvar_index, modeling_index,...
-    na, nb, nc];
-
-
-mdl = PredictionModel(rt, PredictionModelParameters);
-end
-toc;
+% tic;
+% parfor iodelay = 1:100
+%     
+% PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
+%     iodelay, codelay, dependentvar_index, indepedentvar_index, modeling_index,...
+%     na, nb, nc];
+% 
+% 
+% mdl = PredictionModel(rt, PredictionModelParameters);
+% end
+% toc;
+% 
+% tic;
+% for iodelay = 1:100
+%     
+% PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
+%     iodelay, codelay, dependentvar_index, indepedentvar_index, modeling_index,...
+%     na, nb, nc];
+% 
+% 
+% mdl = PredictionModel(rt, PredictionModelParameters);
+% end
+% toc;
