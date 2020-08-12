@@ -13,8 +13,9 @@ load VirtualBuilding_Matrix_delT.mat
 
 opt_strategy = 1;
 
-t = 160; %Start timestep
-
+start = 160;
+run = 30;
+for t = start:start+run
 %% Optimization
 switch opt_strategy
 %% Optimization Strategy 1
@@ -46,7 +47,7 @@ end
 S_tin = T1_tin*u_tin_past_group + U_tin*x_tin_group + V_tin;
 
 % Set A and b
-tin_lb = 20;
+tin_lb = 24;
 tin_ub = 52;
 A = [R1_tin R2_tin];
 b = tin_ub-S_tin;
@@ -59,12 +60,17 @@ f = [R1_gas R2_gas];
 f = sum(f);
 
     %% Run optimizatinon
-options = optimoptions(@intlinprog,'MaxTime', 20);
+options = optimoptions(@intlinprog,'MaxTime', 10, 'Display', 'final');
 intcon = 1:2*h;
-[x, fval, ~, output] = intlinprog(f, intcon, A, b, [], [], lb, ub, options);
+try
+    [x, fval, ~, output] = intlinprog(f, intcon, A, b, [], [], lb, ub, options);
+    u_onoff = x(1:h);
+    u_bsp = x(h+1:2*h);
+catch
+    u_onoff = 1;
+    u_bsp = 60;
+end
 
-u_onoff = x(1:h);
-u_bsp = x(h+1:2*h);
         
 signal_in_tp1 = u_onoff(1);
 bsp_in_tp1 = u_bsp(1);
@@ -87,11 +93,21 @@ y_tin = group_data(VB_ym_tin, t-VB_p_tin+1, VB_p_tin);
 u_tin = group_data(VB_um_tin, t-VB_p_tin+2, VB_p_tin);
 x_tin = group_data(VB_xm_tin, t-VB_p_tin+2, VB_p_tin);
 
-VB_A_tin*y_tin + VB_B1_tin*u_tin + VB_B2_tin*x_tin
-VB_ym_tin(t)
-VB_ym_tin(t+1)
+VB_ym_tin(t+1, 1)=VB_A_tin*y_tin + VB_B1_tin*u_tin + VB_B2_tin*x_tin;
 
 
+y_gas = group_data(VB_ym_gas, t-VB_p_gas+1, VB_p_gas);
+u_gas = group_data(VB_um_gas, t-VB_p_gas+2, VB_p_gas);
+x_gas = group_data(VB_xm_gas, t-VB_p_gas+2, VB_p_gas);
+
+VB_ym_gas(t+1, 1)=VB_A_gas*y_gas + VB_B1_gas*u_gas + VB_B2_gas*x_gas;
+
+%% Display output
+[VB_ym_tin(start:start+run),...
+    VB_um_tin(start:start+run, 1),...
+    VB_um_tin(start:start+run, 2),...
+    VB_ym_gas(start:start+run, 1)*10^(-3)]
+end
 
 
 
