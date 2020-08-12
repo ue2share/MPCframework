@@ -186,15 +186,11 @@ ycalc_R1R2S_u2test = R1_tin*u1 + R2_tin*u2_80 + T1_tin*u_past_group + U_tin*x_gr
 y_p_tmp = group_data(ym_tin, t-p, p);
 u_p_tmpp1 = group_data(um_tin, t-p+1, p);
 x_p_tmpp1 = group_data(xm_tin, t-p+1, p);
-u_4_id = um_tin(t-p+1:t, :);
-x_4_id = xm_tin(t-p+1:t, :);
-id3 = iddata(y_p_tmp, [u_4_id, x_4_id]);
 
-ycalc_comp = compare(id3, mdl);
-ycalc_comp = ycalc_comp.y;
+
 ycalc_mat = A_tin*y_p_tmp + B1*u_p_tmpp1 + B2*x_p_tmpp1;
 
-[ym_tin(t) ycalc_mat];
+[ym_tin(t) ycalc_mat]
 
 
 
