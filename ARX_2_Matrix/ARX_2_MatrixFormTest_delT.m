@@ -1,14 +1,22 @@
 %% Test with delT
-load delT_4_matrix.mat
+
 
 
 global p q r h t
+for ii = 1:2
+    if ii==1
+        load delT_4_matrix.mat
+    else
+        load delT_4_matrix_VirtualBuilding.mat
+    end
+    
+
 % for k = kset
-p = delT_order(1);    % p = model horizon = arx's model order
-[~, q] = size(delT_X);    % q = # of inputs and control inputs
+p = order(1);    % p = model horizon = arx's model order
+[~, q] = size(X);    % q = # of inputs and control inputs
 r = 2;    % r = # of inputs = r
 h = 36;   % n = Prediction horizon
-t = 110;  % k = Starting number
+t = 110;  % k = StardelTg number
 
 p_delT = p;
 h_delT = h;
@@ -19,10 +27,10 @@ h_delT = h;
 % x is input          (tout elec rhout)
 % u is control input  (signal boilerSetPoint)
 
-arx_delT = delT_mdl;
-ym_delT = delT_Y;                 % y measured
-xm_delT = delT_X(:, 3:end);        % x measured (tout elec rhout)
-um_delT = delT_X(:, 1:2);
+arx_delT = mdl;
+ym_delT = Y;                 % y measured
+xm_delT = X(:, 3:end);        % x measured (tout elec rhout)
+um_delT = X(:, 1:2);
 
 
 ugroup1 = group_data(um_delT, t-p+2, p+h-1);
@@ -101,7 +109,20 @@ T2 = T(:, (p-1)*r+1:(h+p-1)*r);
 % y = R1*u1 + R2*u2 + S
 
 %--------------------------------------   R1, 2 matrix   -----------------------------------------%
+R1_delT = zeros(h, h);
+R2_delT = zeros(h, h);
+u1 = zeros(h, 1);
+u2 = zeros(h, 1);
 
+for i = 1:2*h
+    if rem(i, 2)~=0 % odd number
+        R1_delT(:, (i-1)/2+1) = T2(:, i);
+        u1((i-1)/2+1, 1) = u_cont_group(i, 1);
+    else
+        R2_delT(:, i/2) = T2(:, i);
+        u2(i/2, 1) = u_cont_group(i, 1);
+    end
+end
 
 %% Verifying Matrix with particular input set
 
@@ -138,7 +159,7 @@ ycalc_T1T2UV = T1_delT*ugroup3_past + T2*ugroup3_cont + U_delT*xgroup1 + V;
 ycalc_R1R2S = R1_delT*u1 + R2_delT*u2 + T1_delT*u_past_group + U_delT*x_group + V;
 
 %% Test delT Forecast (no delay)
-% Forecasting y with forecast function
+% ForecasdelTg y with forecast function
 %------------------------------------------------------------------------%
 % Using forecast function - yfore : (k+p) ~ (k+p+m-1)
 pastdata_y = ym_delT(t-p+1:t, :);
@@ -153,26 +174,37 @@ yfore = forecast(arx_delT, 'r--',  pastdata, h, futdata);
 
 [ycalc_TUV ycalc_T1T2UV ycalc_R1R2S yfore ym_delT(t+1:t+h)]
 
+%% Transfer matrix to optimization of framework.
+if ii == 1
+    %for optimization
 save('C:\MPCframework\Optimization\Matrix_delT.mat', 'A_delT', 'C_delT','R1_delT', 'R2_delT', 'T1_delT', 'U_delT',...
     'ym_delT', 'xm_delT', 'um_delT',...
     'h_delT', 'p_delT');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    %for mpc Controller
+save('C:\MPCframework\Framework_in_MATLAB\MatlabController_Matrix_delT.mat', 'A_delT', 'C_delT','R1_delT', 'R2_delT', 'T1_delT', 'U_delT',...
+    'ym_delT', 'xm_delT', 'um_delT','h_delT', 'p_delT');
+else
+    %for VirtualBuilding
+    VB_A_delT = A_delT;
+    VB_B1_delT = B1;
+    VB_B2_delT = B2;
+    VB_C_delT = C_delT;
+    VB_R1_delT = R1_delT;
+    VB_R2_delT = R2_delT;
+    VB_T1_delT = T1_delT;
+    VB_U_delT = U_delT;
+    VB_ym_delT = ym_delT;
+    VB_um_delT = um_delT;
+    VB_xm_delT = xm_delT;
+    VB_h_delT = h_delT;
+    VB_p_delT = p_delT;
+    VB_model_delT = arx_delT;
+    
+save('C:\MPCframework\Framework_in_MATLAB\VirtualBuilding_Matrix_delT.mat', 'VB_A_delT', 'VB_C_delT','VB_R1_delT',...
+    'VB_R2_delT', 'VB_T1_delT', 'VB_U_delT', 'VB_B1_delT', 'VB_B2_delT',...
+    'VB_ym_delT', 'VB_xm_delT', 'VB_um_delT',...
+    'VB_h_delT', 'VB_p_delT', 'VB_model_delT');
+    
+    
+end
+end

@@ -1,4 +1,4 @@
-function [ model ] = PredictionModel(rawtable, PredictionModelParameters)
+function [ model, order, X, Y, iddata ] = PredictionModel(rawtable, PredictionModelParameters)
 
 occnum              =PredictionModelParameters(1);
 sampletime          =PredictionModelParameters(2);
@@ -40,11 +40,11 @@ switch modeling_index
     model = fitlm(X, Y);
 
     case 2 % ARX
-    [~, ~, iddata] = PredictionModelPar_2_ModelInput(t, startnum, duration, inputarray,...
+    [X, Y, iddata] = PredictionModelPar_2_ModelInput(t, startnum, duration, inputarray,...
     dependentvar_index, iodelay, codelay);  
     [order, ~] = order_4_ar_family(inputarray, na, nb, nc);
     model = arx(iddata, order);
-
+    
     case 3 % ARMAX
     [~, ~, iddata] = PredictionModelPar_2_ModelInput(t, startnum, duration, inputarray,...
     dependentvar_index, iodelay, codelay);  

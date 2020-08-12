@@ -25,7 +25,7 @@ u2vars = h+1:2*h; % bsp
 lb = zeros(2*h, 1); 
 ub = ones(2*h, 1);
 lb(u2vars) = 40;
-ub(u2vars) = 70;
+ub(u2vars) = 80;
 
 %% Inequality constraints - Tin
 % 22<=[R1 R2]*[u1 u2]' + S_tin<=26
@@ -43,7 +43,7 @@ end
 S_tin = T1_tin*u_tin_past_group + U_tin*x_tin_group + V_tin;
 
 % Set A and b
-tin_lb = 22;
+tin_lb = 26;
 tin_ub = 52;
 A = [R1_tin R2_tin];
 b = tin_ub-S_tin;
@@ -74,7 +74,7 @@ tin_from_data = R1_tin*u1 + R2_tin*u2 + T1_tin*u_tin_past_group + U_tin*x_tin_gr
 options = optimoptions(@intlinprog,'MaxTime', 20);
 [x, fval, ~, output] = intlinprog(f, intcon, A, b, [], [], lb, ub, options);
 
-%% Check Optimizatin result
+%% Check Optimization result
 u_onoff = x(1:h);
 u_bsp = x(h+1:2*h);
 tin_opt = R1_tin*u_onoff + R2_tin*(u_bsp) + S_tin;
@@ -94,9 +94,7 @@ S_gas = T1_gas*u_gas_past_group + U_gas*x_gas_group + V_gas;
 
 gas = R1_gas*u_onoff + R2_gas*u_bsp + S_gas;
 
-
-
-[tin_from_data tin_opt u_onoff u_bsp gas]
+[tin_from_data tin_opt u1 u_onoff u2 u_bsp ym_gas(t+1:t+h) gas]
 
 
 

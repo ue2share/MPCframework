@@ -1,11 +1,19 @@
 %% Test with tin
-load tin_4_matrix.mat
+
 
 
 global p q r h t
+for ii = 1:2
+    if ii==1
+        load tin_4_matrix.mat
+    else
+        load tin_4_matrix_VirtualBuilding.mat
+    end
+    
+
 % for k = kset
-p = tin_order(1);    % p = model horizon = arx's model order
-[~, q] = size(tin_X);    % q = # of inputs and control inputs
+p = order(1);    % p = model horizon = arx's model order
+[~, q] = size(X);    % q = # of inputs and control inputs
 r = 2;    % r = # of inputs = r
 h = 36;   % n = Prediction horizon
 t = 110;  % k = Starting number
@@ -19,10 +27,10 @@ h_tin = h;
 % x is input          (tout elec rhout)
 % u is control input  (signal boilerSetPoint)
 
-arx_tin = tin_mdl;
-ym_tin = tin_Y;                 % y measured
-xm_tin = tin_X(:, 3:end);        % x measured (tout elec rhout)
-um_tin = tin_X(:, 1:2);
+arx_tin = mdl;
+ym_tin = Y;                 % y measured
+xm_tin = X(:, 3:end);        % x measured (tout elec rhout)
+um_tin = X(:, 1:2);
 
 
 ugroup1 = group_data(um_tin, t-p+2, p+h-1);
@@ -166,9 +174,51 @@ yfore = forecast(arx_tin, 'r--',  pastdata, h, futdata);
 
 [ycalc_TUV ycalc_T1T2UV ycalc_R1R2S yfore ym_tin(t+1:t+h)]
 
+%% Transfer matrix to optimization of framework.
+if ii == 1
+    %for optimization
 save('C:\MPCframework\Optimization\Matrix_tin.mat', 'A_tin', 'C_tin','R1_tin', 'R2_tin', 'T1_tin', 'U_tin',...
     'ym_tin', 'xm_tin', 'um_tin',...
     'h_tin', 'p_tin');
+    %for mpc Controller
+save('C:\MPCframework\Framework_in_MATLAB\MatlabController_Matrix_tin.mat', 'A_tin', 'C_tin','R1_tin', 'R2_tin', 'T1_tin', 'U_tin',...
+    'ym_tin', 'xm_tin', 'um_tin','h_tin', 'p_tin');
+
+
+else
+    %for VirtualBuilding
+    VB_A_tin = A_tin;
+    VB_B1_tin = B1;
+    VB_B2_tin = B2;
+    VB_C_tin = C_tin;
+    VB_R1_tin = R1_tin;
+    VB_R2_tin = R2_tin;
+    VB_T1_tin = T1_tin;
+    VB_U_tin = U_tin;
+    VB_ym_tin = ym_tin;
+    VB_um_tin = um_tin;
+    VB_xm_tin = xm_tin;
+    VB_h_tin = h_tin;
+    VB_p_tin = p_tin;
+    VB_model_tin = arx_tin;
+    
+save('C:\MPCframework\Framework_in_MATLAB\VirtualBuilding_Matrix_tin.mat', 'VB_A_tin', 'VB_C_tin','VB_R1_tin',...
+    'VB_R2_tin', 'VB_T1_tin', 'VB_U_tin','VB_B1_tin', 'VB_B2_tin',...
+    'VB_ym_tin', 'VB_xm_tin', 'VB_um_tin',...
+    'VB_h_tin', 'VB_p_tin', 'VB_model_tin');
+    
+    
+end
+end
+%% Test the effect of bsp(u2)
+
+% u1 = ones(size(u1));
+% u1(1:18) = 0;
+u2_80 = ones(size(u2))*80;
+ycalc_R1R2S_u2test = R1_tin*u1 + R2_tin*u2_80 + T1_tin*u_past_group + U_tin*x_group + V;
+
+[ycalc_R1R2S ycalc_R1R2S_u2test u1 u2 u2_80];
+
 
 
 

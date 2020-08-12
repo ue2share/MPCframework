@@ -4,11 +4,12 @@ function [ output_args ] = InputIndex_2_InputArray( dependentVar_index, independ
 switch dependentVar_index
     case 1
         inputset_total_raw = [2 5 7 8];
+        inputset_total = cell([15, 1]);
     case 3
         inputset_total_raw = [1 2 5 7 8];
          inputset_total = cell([31, 1]);
     case 12
-        inputset_total_raw = [12 5 7 8];
+        inputset_total_raw = [1 2 5 7 8];
          inputset_total = cell([31, 1]);
 end
 

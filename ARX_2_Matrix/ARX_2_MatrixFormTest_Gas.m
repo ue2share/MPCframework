@@ -1,14 +1,23 @@
 %% Test with gas
-load gas_4_matrix.mat
+
 
 
 global p q r h t
+for ii = 1:2
+    if ii==1
+        load gas_4_matrix.mat
+    else
+        load gas_4_matrix_VirtualBuilding.mat
+    end
+    
+
 % for k = kset
-p = gas_order(1);    % p = model horizon = arx's model order
-[~, q] = size(gas_X);    % q = # of inputs and control inputs
+p = order(1);    % p = model horizon = arx's model order
+[~, q] = size(X);    % q = # of inputs and control inputs
 r = 2;    % r = # of inputs = r
 h = 36;   % n = Prediction horizon
-t = 110;  % k = Starting number
+t = 110;  % k = Stargasg number
+
 p_gas = p;
 h_gas = h;
 % gas - signal, tout, elec, rhout, bsp
@@ -18,10 +27,10 @@ h_gas = h;
 % x is input          (tout elec rhout)
 % u is control input  (signal boilerSetPoint)
 
-arx_gas = gas_mdl;
-ym_gas = gas_Y;                 % y measured
-xm_gas = gas_X(:, 3:end);        % x measured (tout elec rhout)
-um_gas = gas_X(:, 1:2);
+arx_gas = mdl;
+ym_gas = Y;                 % y measured
+xm_gas = X(:, 3:end);        % x measured (tout elec rhout)
+um_gas = X(:, 1:2);
 
 
 ugroup1 = group_data(um_gas, t-p+2, p+h-1);
@@ -150,7 +159,7 @@ ycalc_T1T2UV = T1_gas*ugroup3_past + T2*ugroup3_cont + U_gas*xgroup1 + V;
 ycalc_R1R2S = R1_gas*u1 + R2_gas*u2 + T1_gas*u_past_group + U_gas*x_group + V;
 
 %% Test gas Forecast (no delay)
-% Forecasting y with forecast function
+% Forecasgasg y with forecast function
 %------------------------------------------------------------------------%
 % Using forecast function - yfore : (k+p) ~ (k+p+m-1)
 pastdata_y = ym_gas(t-p+1:t, :);
@@ -165,30 +174,37 @@ yfore = forecast(arx_gas, 'r--',  pastdata, h, futdata);
 
 [ycalc_TUV ycalc_T1T2UV ycalc_R1R2S yfore ym_gas(t+1:t+h)]
 
+%% Transfer matrix to optimization of framework.
+if ii == 1
+    %for optimization
 save('C:\MPCframework\Optimization\Matrix_gas.mat', 'A_gas', 'C_gas','R1_gas', 'R2_gas', 'T1_gas', 'U_gas',...
     'ym_gas', 'xm_gas', 'um_gas',...
     'h_gas', 'p_gas');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    %for mpc Controller
+save('C:\MPCframework\Framework_in_MATLAB\MatlabController_Matrix_gas.mat', 'A_gas', 'C_gas','R1_gas', 'R2_gas', 'T1_gas', 'U_gas',...
+    'ym_gas', 'xm_gas', 'um_gas','h_gas', 'p_gas');
+else
+    %for VirtualBuilding
+    VB_A_gas = A_gas;
+    VB_B1_gas = B1;
+    VB_B2_gas = B2;
+    VB_C_gas = C_gas;
+    VB_R1_gas = R1_gas;
+    VB_R2_gas = R2_gas;
+    VB_T1_gas = T1_gas;
+    VB_U_gas = U_gas;
+    VB_ym_gas = ym_gas;
+    VB_um_gas = um_gas;
+    VB_xm_gas = xm_gas;
+    VB_h_gas = h_gas;
+    VB_p_gas = p_gas;
+    VB_model_gas = arx_gas;
+    
+save('C:\MPCframework\Framework_in_MATLAB\VirtualBuilding_Matrix_gas.mat', 'VB_A_gas', 'VB_C_gas','VB_R1_gas',...
+    'VB_R2_gas', 'VB_T1_gas', 'VB_U_gas', 'VB_B1_gas', 'VB_B2_gas',...
+    'VB_ym_gas', 'VB_xm_gas', 'VB_um_gas',...
+    'VB_h_gas', 'VB_p_gas', 'VB_model_gas');
+    
+    
+end
+end
