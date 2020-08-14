@@ -19,7 +19,7 @@ t = rawtable{occnum};
 %% Model Time resolution(sampletime)
 % Cut raw table with sampletime.
 tsgroup = @(ts) 1:ts:172800;
-t = t(tsgroup(sampletime(:)), :);
+t = t(tsgroup(sampletime), :);
 
 
 %% Model duration

@@ -180,9 +180,14 @@ if ii == 1
 save('C:\MPCframework\Optimization\Matrix_delT.mat', 'A_delT', 'C_delT','R1_delT', 'R2_delT', 'T1_delT', 'U_delT',...
     'ym_delT', 'xm_delT', 'um_delT',...
     'h_delT', 'p_delT');
-    %for mpc Controller
+    %for mpc Controller in MATLAB MPC framework
 save('C:\MPCframework\Framework_in_MATLAB\MatlabController_Matrix_delT.mat', 'A_delT', 'C_delT','R1_delT', 'R2_delT', 'T1_delT', 'U_delT',...
     'ym_delT', 'xm_delT', 'um_delT','h_delT', 'p_delT');
+    %for mpc Controller in TRNSYS MPC framework
+save('C:\MPCframework\Framework_in_TRNSYS\MatlabController_Matrix_delT.mat', 'A_delT', 'C_delT','R1_delT', 'R2_delT', 'T1_delT', 'U_delT',...
+    'xm_delT', 'h_delT', 'p_delT');
+
+
 else
     %for VirtualBuilding
     VB_A_delT = A_delT;

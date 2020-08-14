@@ -180,9 +180,12 @@ if ii == 1
 save('C:\MPCframework\Optimization\Matrix_tin.mat', 'A_tin', 'C_tin','R1_tin', 'R2_tin', 'T1_tin', 'U_tin',...
     'ym_tin', 'xm_tin', 'um_tin',...
     'h_tin', 'p_tin');
-    %for mpc Controller
+    %for mpc Controller in MATLAB MPC framework
 save('C:\MPCframework\Framework_in_MATLAB\MatlabController_Matrix_tin.mat', 'A_tin', 'C_tin','R1_tin', 'R2_tin', 'T1_tin', 'U_tin',...
     'ym_tin', 'xm_tin', 'um_tin','h_tin', 'p_tin');
+    %for mpc Controller in TRNSYS MPC framework
+save('C:\MPCframework\Framework_in_TRNSYS\MatlabController_Matrix_tin.mat', 'A_tin', 'C_tin','R1_tin', 'R2_tin', 'T1_tin', 'U_tin',...
+    'xm_tin', 'h_tin', 'p_tin');
 
 
 else

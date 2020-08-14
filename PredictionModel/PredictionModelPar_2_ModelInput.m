@@ -6,7 +6,7 @@ function[X, Y, iddata_ar] = PredictionModelPar_2_ModelInput(...
 
     iodelay = iodelay-1;
     codelay = codelay-1;
-
+    
     
     % input = signal + bsp + other else
     % codelay to control variable(signal and bsp)

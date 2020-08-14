@@ -15,7 +15,7 @@ load rt
 occnum = 1;
 sampletime = 5; %min
 duration1min = 60*24*60; %sec
-startnum = 1; %with timestep
+startnum = 10; %with timestep
 iodelay = 1;
 codelay = 1;
 dependentvar_index = 1;               %Tin : 1, Gas : 3, delT : 12
@@ -56,15 +56,14 @@ idd = iddata;
 save(file_loc, 'mdl', 'order', 'X', 'Y', 'idd');
 
 
-%% Send to Framework in MATLAB
+%% Send to Matrix folder to make Framework in MATLAB
 tic;
 load rt
 
-
 occnum = 1;
-sampletime = 5; %min
 duration1min = 60*24*30; %min
-startnum = (60*24*60)/5; %with timestep
+sampletime = 5;
+startnum = (60*24*60)/sampletime; %with timestep
 iodelay = 1;
 codelay = 1;              %Tin : 1, Gas : 3, delT : 12
 modeling_index = 2;                    %Lrg : 1, arx : 2, armax : 3, nlarx : 4
@@ -97,6 +96,28 @@ save(file_loc, 'mdl', 'order', 'X', 'Y', 'idd');
 
 
 toc;
+
+%% Send inpunum&outputnum to MPCframework_TRNSYS
+inputnum = InputIndex_2_InputArray(dependentvar_index, indepedentvar_index);
+
+switch dependentvar_index
+    case 1
+        dep = 'tin';
+        tin_inputnum = inputnum;
+    case 3
+        dep = 'gas';
+        gas_inputnum = inputnum;
+    case 12
+        dep = 'delT';
+        delT_inputnum = inputnum;
+end
+
+
+file_loc = sprintf('C:\\MPCframework\\Framework_in_TRNSYS\\%s_inputnum.mat', dep);
+input_name = sprintf('%s_inputnum', dep);
+save(file_loc, input_name, 'sampletime');
+
+
 %% parfor v.s. for
 % tic;
 % parfor iodelay = 1:100

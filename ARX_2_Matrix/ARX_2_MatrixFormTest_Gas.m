@@ -180,9 +180,14 @@ if ii == 1
 save('C:\MPCframework\Optimization\Matrix_gas.mat', 'A_gas', 'C_gas','R1_gas', 'R2_gas', 'T1_gas', 'U_gas',...
     'ym_gas', 'xm_gas', 'um_gas',...
     'h_gas', 'p_gas');
-    %for mpc Controller
+    %for mpc Controller in MATLAB MPC framework
 save('C:\MPCframework\Framework_in_MATLAB\MatlabController_Matrix_gas.mat', 'A_gas', 'C_gas','R1_gas', 'R2_gas', 'T1_gas', 'U_gas',...
     'ym_gas', 'xm_gas', 'um_gas','h_gas', 'p_gas');
+    %for mpc Controller in TRNSYS MPC framework
+save('C:\MPCframework\Framework_in_TRNSYS\MatlabController_Matrix_gas.mat', 'A_gas', 'C_gas','R1_gas', 'R2_gas', 'T1_gas', 'U_gas',...
+    'xm_gas', 'h_gas', 'p_gas');
+
+
 else
     %for VirtualBuilding
     VB_A_gas = A_gas;

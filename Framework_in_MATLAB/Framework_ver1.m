@@ -13,7 +13,7 @@ load VirtualBuilding_Matrix_delT.mat
 
 opt_strategy = 1;
 
-start = 160;
+start = 385;
 run = 30;
 for t = start:start+run
 %% Optimization
@@ -38,6 +38,7 @@ ub(u2vars) = 80;
 u_tin_past_group = group_data(VB_um_tin, t-p_tin+2, p_tin-1); 
 x_tin_group = group_data(VB_xm_tin, t-p_tin+2, p_tin+h_tin-1);
 
+
 V_tin = zeros(h, 1);
 y_tin_past = group_data(VB_ym_tin, t-p_tin+1, p_tin);
 for n = 1:h
@@ -46,13 +47,18 @@ end
 
 S_tin = T1_tin*u_tin_past_group + U_tin*x_tin_group + V_tin;
 
+%% Calculating Occ
+occ = group_data(VB_xm_tin(:, 4), t+1, h);
+occ_index = find(occ==0);
 % Set A and b
 tin_lb = 24;
 tin_ub = 52;
 A = [R1_tin R2_tin];
 b = tin_ub-S_tin;
+b(occ_index) = 100;
 A = [A;-A];
 b_lb = tin_lb-S_tin;
+b_lb(occ_index) = -100;
 b = [b;-b_lb];
 
     %% Objective function
@@ -104,6 +110,7 @@ VB_ym_gas(t+1, 1)=VB_A_gas*y_gas + VB_B1_gas*u_gas + VB_B2_gas*x_gas;
 
 %% Display output
 [VB_ym_tin(start:start+run),...
+    VB_xm_tin(start:start+run, 4),...
     VB_um_tin(start:start+run, 1),...
     VB_um_tin(start:start+run, 2),...
     VB_ym_gas(start:start+run, 1)*10^(-3)]
