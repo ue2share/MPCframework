@@ -13,13 +13,13 @@ load rt
 
 
 occnum = 1;
-sampletime = 5; %min
+sampletime = 10; %min
 duration1min = 60*24*60; %sec
 startnum = 10; %with timestep
 iodelay = 1;
 codelay = 1;
-dependentvar_index = 1;               %Tin : 1, Gas : 3, delT : 12
-indepedentvar_index = 15;
+dependentvar_index = 12;               %Tin : 1, Gas : 3, delT : 12
+indepedentvar_index = 31;
 modeling_index = 2;                    %Lrg : 1, arx : 2, armax : 3, nlarx : 4
 na = 5;
 nb = 5;
@@ -40,16 +40,35 @@ switch modeling_index
     [mdl, order, X, Y, iddata] = PredictionModel(rt, PredictionModelParameters);
 end
 
+%% Save um_xm_like_TRNSYS
+startnum_Jan_min = (30+31)*24*60;
+startnum_Jan = startnum_Jan_min/sampletime+1;
+Jan_2_Feb_min = (31+28)*24*60;
+Jan_2_Feb = Jan_2_Feb_min/sampletime;
+inputarr = InputIndex_2_InputArray(dependentvar_index, indepedentvar_index);
+tsgroup = @(ts) 1:ts:172800;
+t_10min = t(tsgroup(sampletime), :);
+
+um_xm_like_trnsys = PredictionModelPar_2_ModelInput(t_10min, startnum_Jan, Jan_2_Feb,...
+    inputarr, dependentvar_index, iodelay, codelay);
+
+
 %% Send to ARX_2_Matrix
 
 switch dependentvar_index
     case 1
         dep = 'tin';
+        tin_um_xm_like_trnsys = um_xm_like_trnsys;
     case 3
         dep = 'gas';
+        gas_um_xm_like_trnsys = um_xm_like_trnsys;
     case 12
         dep = 'delT';
+        delT_um_xm_like_trnsys = um_xm_like_trnsys;
 end
+file_loc = sprintf('C:\\MPCframework\\Framework_in_TRNSYS\\%s_umxm.mat', dep);
+input_name = sprintf('%s_um_xm_like_trnsys', dep);
+save(file_loc, input_name);
 
 file_loc = sprintf('C:\\MPCframework\\ARX_2_Matrix\\%s_4_matrix.mat', dep);
 idd = iddata;
@@ -60,13 +79,6 @@ save(file_loc, 'mdl', 'order', 'X', 'Y', 'idd');
 tic;
 load rt
 
-occnum = 1;
-duration1min = 60*24*30; %min
-sampletime = 5;
-startnum = (60*24*60)/sampletime; %with timestep
-iodelay = 1;
-codelay = 1;              %Tin : 1, Gas : 3, delT : 12
-modeling_index = 2;                    %Lrg : 1, arx : 2, armax : 3, nlarx : 4
 na = 10;
 nb = 10;
 nc = 10;
@@ -111,7 +123,6 @@ switch dependentvar_index
         dep = 'delT';
         delT_inputnum = inputnum;
 end
-
 
 file_loc = sprintf('C:\\MPCframework\\Framework_in_TRNSYS\\%s_inputnum.mat', dep);
 input_name = sprintf('%s_inputnum', dep);

@@ -25,9 +25,6 @@ t = t(tsgroup(sampletime), :);
 %% Model duration
 duration = duration1min/sampletime;
 
-%% Ouputnum parameters
-
-
 %% Inputnum parameters
 inputarray = InputIndex_2_InputArray(dependentvar_index, indepedentvar_index);
 

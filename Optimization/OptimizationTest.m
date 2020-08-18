@@ -41,14 +41,18 @@ V_tin(n) = A_tin*C_tin^(n-1)*y_tin_past;
 end
 
 S_tin = T1_tin*u_tin_past_group + U_tin*x_tin_group + V_tin;
-
+occ = ones(h, 1);
+occ(10:15) = 0;
+occ_index = find(occ==0);
 % Set A and b
-tin_lb = 26;
-tin_ub = 52;
+tin_lb = 22;
+tin_ub = 26;
 A = [R1_tin R2_tin];
 b = tin_ub-S_tin;
+b(occ_index) = 100;
 A = [A;-A];
 b_lb = tin_lb-S_tin;
+b_lb(occ_index) = -100;
 b = [b;-b_lb];
 
 %% Objective function
@@ -71,7 +75,8 @@ end
 tin_from_data = R1_tin*u1 + R2_tin*u2 + T1_tin*u_tin_past_group + U_tin*x_tin_group + V_tin;
 
 %% Run optimizatinon
-options = optimoptions(@intlinprog,'MaxTime', 20);
+
+options = optimoptions(@intlinprog,'MaxTime', 10);
 [x, fval, ~, output] = intlinprog(f, intcon, A, b, [], [], lb, ub, options);
 
 %% Check Optimization result
