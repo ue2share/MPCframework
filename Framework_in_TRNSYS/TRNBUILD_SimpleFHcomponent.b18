@@ -2,7 +2,7 @@
 *  TRNBuild   3.0.294
 *********************************************************************************
 *   BUILDING DESCRIPTIONS FILE TRNSYS
-*   FOR BUILDING:   C:\TRNSYS18\MyProjects\VirtualModelSeason2\TRNBUILD_SimpleFHcomponent.b18
+*   FOR BUILDING:   C:\MPCframework\Framework_in_TRNSYS\TRNBUILD_SimpleFHcomponent.b18
 *   GET BY WORKING WITH TRNBuild 1.0 for Windows
 *********************************************************************************
 *
@@ -352,7 +352,7 @@ WINDOW=ADJ_WINDOW2 : SURF= 32 : AREA=     5.775 : ADJACENT=LIVING : ADJ_SURF=40 
  GAIN        = Occ_Gain   : SCALE= 0.2 : GEOPOS= 0 : SCALE2= 1 : FRAC_REFAREA= -1
  GAIN        = Equip_Gain : SCALE= 0.4 : GEOPOS= 0 : SCALE2= 1 : FRAC_REFAREA= -1
  INFILTRATION= INFIL0.5
- CAPACITANCE = 33.709  : VOLUME= 28.091  : REFAREA= 12.485  : TINITIAL= 20      : PHINITIAL= 50      : WCAPR= 1
+ CAPACITANCE = 33.709  : VOLUME= 28.091  : REFAREA= 12.485  : TINITIAL= 22      : PHINITIAL= 50      : WCAPR= 1
 *--------------------------------------------------------------------------------
 *  Z o n e  LIVING  /  A i r n o d e  LIVING
 *--------------------------------------------------------------------------------
@@ -374,7 +374,7 @@ WALL         =BND_WALL   : SURF= 38 : AREA=    10.013 : BOUNDARY=INPUT 1*liveast
  GAIN        = Equip_Gain : SCALE= 0.6 : GEOPOS= 0 : SCALE2= 1 : FRAC_REFAREA= -1
  GAIN        = Occ_Gain   : SCALE= 0.8 : GEOPOS= 0 : SCALE2= 1 : FRAC_REFAREA= -1
  INFILTRATION= INFIL0.5
- CAPACITANCE = 51.664  : VOLUME= 43.054  : REFAREA= 19.135  : TINITIAL= 20      : PHINITIAL= 50      : WCAPR= 1
+ CAPACITANCE = 51.664  : VOLUME= 43.054  : REFAREA= 19.135  : TINITIAL= 22      : PHINITIAL= 50      : WCAPR= 1
 *--------------------------------------------------------------------------------
 *  Z o n e  BALCONY  /  A i r n o d e  BALCONY
 *--------------------------------------------------------------------------------

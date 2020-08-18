@@ -61,11 +61,8 @@ ym_delT(ts_10min, 1) = trnInputs(10)-trnInputs(9);
 
 %% Transfer manual signal when there are not enough value in ym, xm to optimization.
 mFileErrorCode = 135;
-if ts_10min<pmax & ym_tin(ts_10min, 1)<24
+if ts_10min<pmax
     um(ts_10min, 1) = 1;
-    um(ts_10min, 2) = 60;
-elseif ts_10min<pmax & ym_tin(ts_10min, 1)>=24
-    um(ts_10min, 1) = 0;
     um(ts_10min, 2) = 60;
 elseif ts_10min>=pmax % When there are enough value to optimization
     %% Optimization
@@ -108,7 +105,7 @@ elseif ts_10min>=pmax % When there are enough value to optimization
         occ = group_data(xm_tin(:, 4), ts_10min+1, h);
         occ_index = find(occ==0);
         % Set A and b
-        tin_lb = 22*ones(36, 1);
+        tin_lb = 20*ones(36, 1);
         tin_lb(occ_index) = 100;
         tin_ub = 28*ones(36, 1);
         tin_ub(occ_index) = -100;
@@ -131,16 +128,16 @@ elseif ts_10min>=pmax % When there are enough value to optimization
         %% Run optimization
         options = optimoptions(@intlinprog,'MaxTime', 10, 'Display', 'final');
         intcon = 1:2*h;
-            try
+%             try
             [x, fval, ~, output] = intlinprog(f, intcon, A, b, [], [], lb, ub, options);
             u_onoff = x(1:h);
             u_bsp = x(h+1:2*h);
-            catch
-                errorindex = errorindex+1;
-                errormat(:, errorindex) = [ts_10min; S_tin];
-                u_onoff = um(ts_10min-1, 1);
-                u_bsp = um(ts_10min-1, 2);
-            end
+%             catch
+%                 errorindex = errorindex+1;
+%                 errormat(:, errorindex) = [ts_10min; S_tin];
+%                 u_onoff = um(ts_10min-1, 1);
+%                 u_bsp = um(ts_10min-1, 2);
+%             end
 
             
         %% Save signal in um
