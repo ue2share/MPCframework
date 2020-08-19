@@ -19,7 +19,7 @@ startnum = 10; %with timestep
 iodelay = 1;
 codelay = 1;
 dependentvar_index = 1;               %Tin : 1, Gas : 3, delT : 12
-indepedentvar_index = 15;
+indepedentvar_index = 2;
 modeling_index = 2;                    %Lrg : 1, arx : 2, armax : 3, nlarx : 4
 na = 5;
 nb = 5;
@@ -39,6 +39,7 @@ switch modeling_index
     case 2
     [mdl, order, X, Y, iddata] = PredictionModel(rt, PredictionModelParameters);
 end
+
 %% Save um_xm_like_TRNSYS
 startnum_Jan_min = (30+31)*24*60;
 startnum_Jan = startnum_Jan_min/sampletime+1;

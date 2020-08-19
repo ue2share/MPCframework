@@ -172,39 +172,39 @@ Simulation log for: "C:\MPCframework\Framework_in_TRNSYS\VirtualBuilding_MPCFram
     Total Warnings        :         1
     Total Fatal Errors    :         0
  
-    Total TRNSYS Calculation Time     :          8944.0000 seconds
-    Calculation time inside the Types :          7635.6900 seconds
+    Total TRNSYS Calculation Time     :          9478.8400 seconds
+    Calculation time inside the Types :          9316.0300 seconds
  
     TRNSYS Calculation Time Breakdown by Unit Number
-    Unit     2 :           0.140000 seconds
-    Unit    16 :           0.020000 seconds
+    Unit     2 :           0.120000 seconds
+    Unit    16 :           0.040000 seconds
     Unit    17 :           0.000000 seconds
-    Unit    18 :           0.020000 seconds
-    Unit    19 :           0.010000 seconds
-    Unit    20 :           0.020000 seconds
+    Unit    18 :           0.000000 seconds
+    Unit    19 :           0.020000 seconds
+    Unit    20 :           0.000000 seconds
     Unit    35 :           0.000000 seconds
-    Unit     8 :           0.040000 seconds
-    Unit    10 :           0.050000 seconds
-    Unit    23 :           2.110000 seconds
+    Unit     8 :           0.030000 seconds
+    Unit    10 :           0.040000 seconds
+    Unit    23 :           2.170000 seconds
     Unit    26 :           0.000000 seconds
     Unit    28 :           0.010000 seconds
-    Unit    29 :           0.000000 seconds
+    Unit    29 :           0.010000 seconds
     Unit    33 :           0.000000 seconds
-    Unit    34 :        7633.140137 seconds
-    Unit    30 :           0.000000 seconds
-    Unit    36 :           0.130000 seconds
+    Unit    34 :        9313.530273 seconds
+    Unit    30 :           0.010000 seconds
+    Unit    36 :           0.050000 seconds
  
     TRNSYS Calculation Time Breakdown by Type Number
-    Type     9 :           0.070000 seconds
-    Type    15 :           0.140000 seconds
-    Type    25 :           0.130000 seconds
-    Type    56 :           2.110000 seconds
-    Type    65 :           0.000000 seconds
+    Type     9 :           0.060000 seconds
+    Type    15 :           0.120000 seconds
+    Type    25 :           0.050000 seconds
+    Type    56 :           2.170000 seconds
+    Type    65 :           0.010000 seconds
     Type   150 :           0.010000 seconds
-    Type   155 :        7633.140137 seconds
-    Type   166 :           0.000000 seconds
+    Type   155 :        9313.530273 seconds
+    Type   166 :           0.010000 seconds
     Type   577 :           0.000000 seconds
-    Type   653 :           0.090000 seconds
+    Type   653 :           0.070000 seconds
     Type   700 :           0.000000 seconds
  
     TRNSYS Iterative Call Breakdown by Unit Number
@@ -215,13 +215,13 @@ Simulation log for: "C:\MPCframework\Framework_in_TRNSYS\VirtualBuilding_MPCFram
     Unit    19 :               2019 calls
     Unit    20 :               2019 calls
     Unit    35 :               2019 calls
-    Unit     8 :               4200 calls
-    Unit    10 :               4099 calls
-    Unit    23 :               3496 calls
-    Unit    26 :               3027 calls
-    Unit    28 :               2461 calls
+    Unit     8 :               4204 calls
+    Unit    10 :               4098 calls
+    Unit    23 :               3507 calls
+    Unit    26 :               3026 calls
+    Unit    28 :               2506 calls
     Unit    29 :               2023 calls
     Unit    33 :               2019 calls
-    Unit    34 :               3029 calls
+    Unit    34 :               3028 calls
     Unit    30 :               1011 calls
     Unit    36 :               1011 calls

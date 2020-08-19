@@ -15,7 +15,7 @@ for ii = 1:2
 p = order(1);    % p = model horizon = arx's model order
 [~, q] = size(X);    % q = # of inputs and control inputs
 r = 2;    % r = # of inputs = r
-h = 36;   % n = Prediction horizon
+h = 72;   % n = Prediction horizon
 t = 110;  % k = StardelTg number
 
 p_delT = p;
