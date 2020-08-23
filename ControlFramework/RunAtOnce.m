@@ -28,7 +28,7 @@ TestingArray(20, :) = [3 31 5 6];
 TestingArray(21, :) = [3 31 5 18];
 TestingArray(22, :) = [3 31 5 72];
 
-ind = 1;
+ind = 12;
 dependentvar_index = TestingArray(ind, 1);               %Tin : 1, Gas : 3, delT : 12
 indepedentvar_index = TestingArray(ind, 2);
 na = TestingArray(ind, 3);
