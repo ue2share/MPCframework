@@ -37,7 +37,7 @@ switch modeling_index
     case 1
         
     case 2
-    [mdl, order, X, Y, iddata] = PredictionModel(rt, PredictionModelParameters);
+    [mdl, order, X, Y, iddata, occarray] = PredictionModel(rt, PredictionModelParameters);
 end
 %% Save um_xm_like_TRNSYS
 startnum_Jan_min = (30+31)*24*60;

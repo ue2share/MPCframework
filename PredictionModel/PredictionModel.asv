@@ -30,8 +30,6 @@ inputarray = InputIndex_2_InputArray(dependentvar_index, indepedentvar_index);
 occarray = InputIndex_2_InputArray(1, 4);
 %% Modeling Method
 
-occarray = PredictionModelPar_2_ModelInput(t, startnum, duration, occarray,...
-        1, iodelay, codelay);
 switch modeling_index
     case 1 % Linear Regression
     [X, Y, ~] = PredictionModelPar_2_ModelInput(t, startnum, duration, inputarray,...
