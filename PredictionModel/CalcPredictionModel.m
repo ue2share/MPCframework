@@ -122,7 +122,7 @@ end
 
 file_loc = sprintf('C:\\MPCframework\\Framework_in_TRNSYS\\%s_inputnum.mat', dep);
 input_name = sprintf('%s_inputnum', dep);
-save(file_loc, input_name, 'sampletime');
+save(file_loc, input_name, 'sampletime', 'occarray');
 
 
 %% parfor v.s. for
