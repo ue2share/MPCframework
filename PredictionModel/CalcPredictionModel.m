@@ -18,12 +18,12 @@ duration1min = 60*24*60; %sec
 startnum = 10; %with timestep
 iodelay = 1;
 codelay = 1;
-dependentvar_index = 1;               %Tin : 1, Gas : 3, delT : 12
-indepedentvar_index = 15;
+% dependentvar_index = 1;               %Tin : 1, Gas : 3, delT : 12
+% indepedentvar_index = 15;
 modeling_index = 2;                    %Lrg : 1, arx : 2, armax : 3, nlarx : 4
-na = 5;
-nb = 5;
-nc = 5;
+% na = 5;
+% nb = 5;
+% nc = 5;
 
 
 PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
@@ -78,9 +78,6 @@ save(file_loc, 'mdl', 'order', 'X', 'Y', 'idd');
 tic;
 load rt
 
-na = 10;
-nb = 10;
-nc = 10;
 
 PredictionModelParameters = [occnum, sampletime, duration1min, startnum, ...
     iodelay, codelay, dependentvar_index, indepedentvar_index, modeling_index,...

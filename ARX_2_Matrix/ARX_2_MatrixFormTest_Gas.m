@@ -15,8 +15,8 @@ for ii = 1:2
 p = order(1);    % p = model horizon = arx's model order
 [~, q] = size(X);    % q = # of inputs and control inputs
 r = 2;    % r = # of inputs = r
-h = 72;   % n = Prediction horizon
-t = 110;  % k = Stargasg number
+h = phzn;   % n = Prediction horizon
+t = 110;  % k = Starting number
 
 p_gas = p;
 h_gas = h;
