@@ -12,7 +12,7 @@ if ( (trnInfo(7) == 0) & (trnTime-trnStartTime < 1e-6) )
     
     load tin_inputnum.mat
     load gas_inputnum.mat
-    load delT_inputnum.mat
+    load delT_inputnum.mat  
     
     load tin_umxm.mat
     load gas_umxm.mat
@@ -102,7 +102,7 @@ elseif ts_10min>=pmax % When there are enough value to optimization
         
         %% Calculating Occ
         mFileErrorCode = 321;  
-        occ = group_data(occarray(:, 3), ts_10min+1, h);
+        occ = group_data(xm_delT(:, 5), ts_10min+1, h);
         occ_index = find(occ==0);
         % Set A and b
         tin_lb = 23*ones(h, 1);
